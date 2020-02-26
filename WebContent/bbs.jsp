@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="java.io.PrintWriter"%>
+<%@ page import="bbs.BbsDAO"%>
+<%@ page import="bbs.Bbs"%>
+<%@ page import="java.util.ArrayList"%>
 <!-- 라이브러리 불러오기 -->
 <!DOCTYPE html>
 <html>
@@ -15,6 +18,10 @@
 		String userID = null;
 		if (session.getAttribute("userID") != null) {
 			userID = (String) session.getAttribute("userID");
+		}
+		int pageNumber = 1;
+		if (request.getParameter("pageNumber") != null) {
+			pageNumber = Integer.parseInt(request.getParameter("pageNumber"));
 		}
 	%>
 	<nav class="navbar navbar-default">
@@ -34,7 +41,7 @@
 				<li class="active"><a href="bbs.jsp">게시판</a></li>
 			</ul>
 			<%
-				if(userID == null){
+				if (userID == null) {
 			%>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -43,11 +50,10 @@
 					<ul class="dropdown-menu">
 						<li><a href="login.jsp">로그인</a></li>
 						<li><a href="join.jsp">회원가입</a></li>
-					</ul>
-				</li>
+					</ul></li>
 			</ul>
 			<%
-				}else{
+				} else {
 			%>
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -55,17 +61,17 @@
 					aria-exapnded="false">회원관리<span class="caret"></span></a>
 					<ul class="dropdown-menu">
 						<li><a href="logoutAction.jsp">로그아웃</a></li>
-					</ul>
-				</li>
+					</ul></li>
 			</ul>
-			<%		
+			<%
 				}
 			%>
 		</div>
 	</nav>
 	<div class="container">
 		<div class="row">
-			<table class="table table-striped" style="text-align: center; border: 1px solid #dddddd">
+			<table class="table table-striped"
+				style="text-align: center; border: 1px solid #dddddd">
 				<thead>
 					<tr>
 						<th style="background-color: #eeeeee; text-align: center;">번호</th>
@@ -75,12 +81,20 @@
 					</tr>
 				</thead>
 				<tbody>
+					<%
+						BbsDAO bbsDAO = new BbsDAO();
+						ArrayList<Bbs> list = bbsDAO.getList(pageNumber);
+						for(int i=0; i<list.size(); i++){
+					%>
 					<tr>
 						<td>1</td>
 						<td>안녕하세쇼</td>
 						<td>오창훈</td>
 						<td>2020-01-31</td>
 					</tr>
+					<% 
+						}
+					%>
 				</tbody>
 				<a href="write.jsp" class="btn btn-primary pull-right">글쓰기</a>
 			</table>
